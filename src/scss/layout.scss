@@ -1,0 +1,16 @@
+:root {
+	--color-red: #d32f2f;
+	--color-yellow: #ffb300;
+	--color-green: #4caf50;
+	--color-blue: #1976d2;
+}
+html {
+	font-size: 1rem;
+}
+button {
+	svg {
+		width: 0.8rem;
+		height: 0.8rem;
+		object-fit: contain;
+	}
+}
