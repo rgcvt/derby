@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import { store } from '@/store.js';
 import RaceLane from '@/components/RaceLane.vue';
 const props = defineProps({
@@ -32,21 +32,20 @@ const races = ref(store.appState.races);
 const appState = ref(store.appState);
 const race = races.value[props.raceIndex];
 const incrementRace = (e) => {
-	// TODO: this is sloppy use nextTick
-	setTimeout(() => {
+	nextTick(() => {
 		const unchecked = races.value.filter((r) => r.complete == false);
 		if (unchecked.length == 1) {
-			appState.value.raceCurrentIndex = unchecked[0].id - 1;
+			appState.value.raceCurrentIndex = unchecked[0].index;
 			appState.value.raceNextIndex = null;
 		} else if (unchecked.length > 1) {
 			console.log(unchecked);
-			appState.value.raceCurrentIndex = unchecked[0].id - 1;
-			appState.value.raceNextIndex = unchecked[1].id - 1;
+			appState.value.raceCurrentIndex = unchecked[0].index;
+			appState.value.raceNextIndex = unchecked[1].index;
 		} else {
 			appState.value.raceCurrentIndex = null;
 			appState.value.raceNextIndex = null;
 		}
-	}, 10);
+	});
 };
 </script>
 <style lang="scss" scoped>

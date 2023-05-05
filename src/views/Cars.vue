@@ -2,9 +2,11 @@
 	<SidebarLayout>
 		<PageHeader>
 			<template v-slot:title>Cars</template>
-			<template v-slot:action
-				><button @click="sortCars"><SortDesc /> Sort</button></template
-			>
+			<template v-slot:action>
+				<div v-if="races.length == 0">
+					<button @click="sortCars"><SortDesc /> Sort</button>
+				</div>
+			</template>
 		</PageHeader>
 		<div class="cars">
 			<div v-for="(car, i) in cars" class="car">
@@ -88,7 +90,7 @@
 	</SidebarLayout>
 </template>
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, nextTick, onMounted } from 'vue';
 import { store } from '@/store.js';
 import InlineInput from '@/components/InlineInput.vue';
 import SidebarLayout from '@/layouts/SidebarLayout.vue';
@@ -113,12 +115,12 @@ const updateNumber = (number, i) => {
 
 const showForm = () => {
 	formVisible.value = true;
-	// TODO: this is sloppy use nextTick
-	setTimeout(() => {
+
+	nextTick(() => {
 		const number = document.querySelector('[name="number"]');
-		number.value = cars.value.length + 1;
+		//number.value = cars.value.length + 1;
 		number.focus();
-	}, 10);
+	});
 };
 
 const addCar = (e) => {

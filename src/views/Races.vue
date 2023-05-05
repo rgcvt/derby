@@ -32,17 +32,23 @@ import PageHeader from '../components/PageHeader.vue';
 
 const cars = ref(store.appState.cars);
 const races = ref(store.appState.races);
+const appState = ref(store.appState);
 
 const colors = ['red', 'yellow', 'green', 'blue'];
 
 const deleteRaces = () => {
 	if (confirm('This will delete all races, do you want to proceed?')) {
 		races.value.length = 0;
+		appState.value.raceCurrentIndex = null;
+		appState.value.raceNextIndex = null;
 	}
 };
 
 const makeRaces = () => {
 	races.value.length = 0;
+
+	// sort the cars
+	cars.value.sort((a, b) => a.id - b.id);
 
 	cars.value.forEach((car, i) => {
 		races.value.push({
@@ -65,6 +71,8 @@ const makeRaces = () => {
 	populate();
 	shuffleArray(races.value);
 	races.value.map((r, i) => (r.index = i));
+	appState.value.raceCurrentIndex = 0;
+	appState.value.raceNextIndex = 1;
 };
 
 const populate = () => {
