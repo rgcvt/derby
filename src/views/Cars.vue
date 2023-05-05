@@ -2,6 +2,9 @@
 	<SidebarLayout>
 		<PageHeader>
 			<template v-slot:title>Cars</template>
+			<template v-slot:action
+				><button @click="sortCars"><SortDesc /> Sort</button></template
+			>
 		</PageHeader>
 		<div class="cars">
 			<div v-for="(car, i) in cars" class="car">
@@ -36,8 +39,9 @@
 					</div>
 				</div>
 
-				<div class="delete">
+				<div class="delete-action">
 					<button
+						class="delete"
 						v-if="races.length == 0"
 						@click="deleteCar($event, i)"
 						title="delete"
@@ -63,6 +67,7 @@
 			</div>
 			<button
 				type="button"
+				class="delete"
 				@click="
 					() => {
 						formVisible = !formVisible;
@@ -71,16 +76,12 @@
 			>
 				<Close />
 			</button>
-			<button><Add /></button>
+			<button class="add"><Add /></button>
 		</form>
 		<button
 			class="new-car-button"
 			v-if="!formVisible && races.length == 0"
-			@click="
-				() => {
-					formVisible = !formVisible;
-				}
-			"
+			@click="showForm"
 		>
 			+ New Car
 		</button>
@@ -95,6 +96,7 @@ import PageHeader from '@/components/PageHeader.vue';
 import Trash from '@/icons/Trash.vue';
 import Add from '@/icons/Add.vue';
 import Close from '@/icons/Close.vue';
+import SortDesc from '@/icons/SortDesc.vue';
 
 const cars = ref(store.appState.cars);
 const races = ref(store.appState.races);
@@ -107,6 +109,16 @@ const updateDriver = (driver, i) => {
 };
 const updateNumber = (number, i) => {
 	cars.value[i].id = number;
+};
+
+const showForm = () => {
+	formVisible.value = true;
+	// TODO: this is sloppy use nextTick
+	setTimeout(() => {
+		const number = document.querySelector('[name="number"]');
+		number.value = cars.value.length + 1;
+		number.focus();
+	}, 10);
 };
 
 const addCar = (e) => {
@@ -131,6 +143,10 @@ const addCar = (e) => {
 
 const deleteCar = (e, i) => {
 	cars.value.splice(i, 1);
+};
+
+const sortCars = () => {
+	cars.value.sort((a, b) => a.id - b.id);
 };
 </script>
 <style scoped lang="scss">
@@ -193,5 +209,18 @@ form.car {
 	font-size: 0.8rem;
 	color: var(--color-ui-intense);
 	font-weight: 600;
+}
+button.delete {
+	padding: 0.5rem;
+	background: transparent;
+	border: transparent;
+	opacity: 0.75;
+	transition: opacity 150ms;
+	&:hover {
+		opacity: 1;
+	}
+}
+button.add {
+	padding: 0.5rem;
 }
 </style>

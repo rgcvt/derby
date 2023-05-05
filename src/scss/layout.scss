@@ -12,5 +12,7 @@ button {
 		width: 0.8rem;
 		height: 0.8rem;
 		object-fit: contain;
+		display: inline-block;
+		vertical-align: -0.15em;
 	}
 }

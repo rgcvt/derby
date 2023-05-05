@@ -8,7 +8,7 @@
 			/>
 		</div>
 		<div class="race-footer">
-			<div class="race-number">Race {{ race.id }}</div>
+			<div class="race-number">Race {{ race.index + 1 }}</div>
 			<label class="race-complete">
 				Race Complete
 				<input
@@ -32,6 +32,7 @@ const races = ref(store.appState.races);
 const appState = ref(store.appState);
 const race = races.value[props.raceIndex];
 const incrementRace = (e) => {
+	// TODO: this is sloppy use nextTick
 	setTimeout(() => {
 		const unchecked = races.value.filter((r) => r.complete == false);
 		if (unchecked.length == 1) {
@@ -51,7 +52,7 @@ const incrementRace = (e) => {
 <style lang="scss" scoped>
 .race {
 	border: var(--border-width) solid var(--color-background-card);
-	//background: var(--color-background-card);
+	background: var(--color-background-card);
 	border-radius: var(--border-radius);
 	&[data-status='complete'] {
 		.lane {
@@ -65,8 +66,9 @@ const incrementRace = (e) => {
 .lanes {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
-	gap: 0.5rem;
-	padding: 0.5rem;
+
+	gap: var(--border-width);
+	//padding: 0.5rem;
 }
 
 .race-number {
@@ -85,7 +87,7 @@ const incrementRace = (e) => {
 }
 .race-footer {
 	color: var(--color-ui-intense);
-	background: var(--color-background-card);
+	//background: var(--color-background-card);
 	display: flex;
 	justify-content: space-between;
 	padding: 0.5rem;

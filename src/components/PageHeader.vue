@@ -19,5 +19,7 @@
 .action {
 	text-align: right;
 	margin-left: auto;
+	width: max-content;
+	flex-shrink: 0;
 }
 </style>

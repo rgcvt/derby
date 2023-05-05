@@ -46,15 +46,54 @@
 				</div>
 			</template>
 		</div>
+		<div class="upcoming-races">
+			<h2 v-if="nextRace">Upcoming</h2>
+			<div>
+				<div class="upcoming-race" v-for="race in upcomingRaces">
+					<div class="race-title">Race: {{ race.index + 1 }}</div>
+					<div class="upcoming-lanes">
+						<div class="upcoming-lane" v-for="lane in race.lanes">
+							<div class="color-dot" :data-color="lane.color">⏺</div>
+							<div class="driver">{{ driverByCarId(lane.car) }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="fullscreen-controls">
+			<button
+				v-if="!isFullscreen"
+				@click="enterFullScreen"
+				title="enter fullscreen"
+			>
+				<FullscreenEnter />
+			</button>
+			<button
+				v-if="isFullscreen"
+				@click="exitFullScreen"
+				title="exit fullscreen"
+			>
+				<FullscreenExit />
+			</button>
+		</div>
 	</div>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
 import { store } from '@/store.js';
+import FullscreenEnter from '@/icons/FullscreenEnter.vue';
+import FullscreenExit from '@/icons/FullscreenExit.vue';
 const races = store.appState.races;
 const cars = store.appState.cars;
 const currentRace = races[store.appState.raceCurrentIndex];
 const nextRace = races[store.appState.raceNextIndex];
+const isFullscreen = ref(false);
+
+const upcomingRaces = races
+	.filter((r) => r.id > store.appState.raceNextIndex + 1 && r.complete == false)
+	.slice(0, 2);
+
+console.log(upcomingRaces);
 
 onMounted(() => {
 	window.addEventListener('storage', () => {
@@ -66,6 +105,31 @@ const driverByCarId = (carId) => {
 	const car = cars.find((c) => c.id == carId);
 	return car.driver;
 };
+
+function enterFullScreen() {
+	const element = document.querySelector('.race-display');
+	if (element.requestFullscreen) {
+		element.requestFullscreen();
+	} else if (element.mozRequestFullScreen) {
+		element.mozRequestFullScreen(); // Firefox
+	} else if (element.webkitRequestFullscreen) {
+		element.webkitRequestFullscreen(); // Safari
+	} else if (element.msRequestFullscreen) {
+		element.msRequestFullscreen(); // IE/Edge
+	}
+	isFullscreen.value = true;
+}
+
+function exitFullScreen() {
+	if (document.exitFullscreen) {
+		document.exitFullscreen();
+	} else if (document.mozCancelFullScreen) {
+		document.mozCancelFullScreen();
+	} else if (document.webkitExitFullscreen) {
+		document.webkitExitFullscreen();
+	}
+	isFullscreen.value = false;
+}
 </script>
 <style scoped lang="scss">
 .race-display {
@@ -76,15 +140,19 @@ const driverByCarId = (carId) => {
 	color: #fff;
 	width: 100%;
 	display: grid;
-	grid-template-columns: 2fr 1fr;
+	grid-template-columns: 3fr 2fr 1fr;
 	gap: 2em;
 }
-.race {
+.race,
+.upcoming-races {
 	height: calc(100vh - 2 * var(--padding));
 	display: grid;
 	grid-template-columns: 1fr;
-	grid-template-rows: 3em 1fr 1fr 1fr 1fr;
+	grid-template-rows: 4em 1fr 1fr 1fr 1fr;
 	gap: 1em;
+}
+.upcoming-races {
+	grid-template-rows: 4em 1fr;
 }
 h2 {
 	font-size: 3em;
@@ -113,7 +181,7 @@ h2 {
 	}
 	.driver {
 		font-size: 4em;
-		font-weight: 900;
+		font-weight: 800;
 	}
 }
 .next-race {
@@ -122,8 +190,7 @@ h2 {
 	}
 	.driver {
 		font-size: 3em;
-		font-weight: 900;
-		opacity: 0.7;
+		font-weight: 600;
 	}
 }
 .lane {
@@ -175,6 +242,59 @@ ul.meta {
 		color: var(--color-highlight);
 		filter: brightness(1.5);
 		text-transform: capitalize;
+	}
+}
+.color-dot {
+	line-height: 1;
+	&[data-color='red'] {
+		color: var(--color-red);
+	}
+	&[data-color='yellow'] {
+		color: var(--color-yellow);
+	}
+	&[data-color='green'] {
+		color: var(--color-green);
+	}
+	&[data-color='blue'] {
+		color: var(--color-blue);
+	}
+}
+.upcoming-lane {
+	display: flex;
+	//align-items: center;
+	gap: 0.25em;
+	font-size: 1.75em;
+	font-weight: 600;
+}
+.upcoming-lanes {
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	margin-bottom: 2em;
+}
+.race-title {
+	color: var(--color-ui-intense);
+	font-size: 2em;
+	font-weight: 600;
+	text-transform: uppercase;
+	margin-bottom: 0.25em;
+}
+.fullscreen-controls {
+	position: fixed;
+	bottom: var(--space-md);
+	right: var(--space-md);
+	button {
+		padding: 0;
+		background: transparent;
+		border: transparent;
+		transition: transform 150ms;
+		&:hover {
+			transform: scale(1.1);
+		}
+		svg {
+			width: 3em;
+			height: 3em;
+		}
 	}
 }
 </style>

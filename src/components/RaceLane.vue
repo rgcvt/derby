@@ -82,8 +82,8 @@ const resetTime = (e) => {
 </script>
 <style lang="scss" scoped>
 .lane {
-	background: var(--color-background-card);
-	border-radius: var(--border-radius);
+	background: var(--color-background);
+	//border-radius: var(--border-radius);
 	border-top: 0.25rem solid var(--color-highlight);
 	//border: var(--border-width) solid var(--color-highlight);
 	padding: 0.5rem;

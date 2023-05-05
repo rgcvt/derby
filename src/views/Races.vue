@@ -47,7 +47,7 @@ const makeRaces = () => {
 	cars.value.forEach((car, i) => {
 		races.value.push({
 			id: i + 1,
-
+			index: null,
 			lanes: colors.map((c) => {
 				return { color: c, car: null, time: null };
 			}),
@@ -63,6 +63,8 @@ const makeRaces = () => {
 	});
 	populate();
 	populate();
+	shuffleArray(races.value);
+	races.value.map((r, i) => (r.index = i));
 };
 
 const populate = () => {
@@ -95,6 +97,14 @@ const populate = () => {
 		});
 	});
 	races.value = races.value;
+};
+const shuffleArray = (array) => {
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		const temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+	}
 };
 </script>
 <style>

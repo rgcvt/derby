@@ -4,7 +4,7 @@
 		<hr />
 		<div class="cars">
 			<template v-for="(car, i) in sortedCars">
-				<div class="car" v-if="!car.races.find((r) => r.time == null)">
+				<div class="car" :data-state="state(car.races)">
 					<div class="medal" :data-type="findMedal(i)">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 							<path
@@ -55,6 +55,10 @@ const medals = ['gold', 'silver', 'bronze'];
 const findMedal = (i) => {
 	return medals[i] ? medals[i] : 'none';
 };
+const state = (races) => {
+	const notFinished = races.find((r) => r.time == null);
+	return notFinished ? 'not-finished' : 'finished';
+};
 console.log(sortedCars);
 </script>
 <style scoped lang="scss">
@@ -65,7 +69,7 @@ console.log(sortedCars);
 }
 .car {
 	display: grid;
-	grid-template-columns: 3rem 3ch 1fr 5rem;
+	grid-template-columns: 3rem 4ch 1fr 5rem;
 	background: var(--color-background-card);
 	align-items: center;
 	gap: 0.5rem;
@@ -122,5 +126,15 @@ console.log(sortedCars);
 	font-size: 0.8rem;
 	color: var(--color-ui-intense);
 	font-weight: 600;
+}
+[data-state='not-finished'] {
+	opacity: 0.5;
+	.medal,
+	.place {
+		opacity: 0;
+	}
+	.color-dot {
+		filter: grayscale(1);
+	}
 }
 </style>
