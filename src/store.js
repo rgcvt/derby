@@ -39,7 +39,6 @@ export const store = reactive({
 watch(
 	store.appState,
 	(currentValue, oldValue) => {
-		console.log('updating');
 		localStorage.derbyAppState = JSON.stringify({ ...currentValue });
 	},
 	{ deep: true }

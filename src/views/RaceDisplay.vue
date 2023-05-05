@@ -93,8 +93,6 @@ const upcomingRaces = races
 	.filter((r) => r.index > store.appState.raceNextIndex && r.complete == false)
 	.slice(0, 2);
 
-console.log(upcomingRaces);
-
 onMounted(() => {
 	window.addEventListener('storage', () => {
 		location.reload();
