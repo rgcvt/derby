@@ -13,12 +13,14 @@
 						<button @click="deleteRaces">Delete Races</button>
 					</template>
 				</div>
+				<div v-else>
+					<router-link class="button" to="/cars"><Add /> Add Cars</router-link>
+					<p class="small">
+						You need to add cars before you can build the races.
+					</p>
+				</div>
 			</template>
 		</PageHeader>
-		<div v-if="cars.length == 0">
-			<p>You need to add cars before you can build the races.</p>
-			<router-link class="button" to="/cars">Add Cars</router-link>
-		</div>
 
 		<RaceList />
 	</SidebarLayout>
@@ -29,6 +31,7 @@ import { store } from '@/store.js';
 import RaceList from '@/components/RaceList.vue';
 import SidebarLayout from '../layouts/SidebarLayout.vue';
 import PageHeader from '../components/PageHeader.vue';
+import Add from '../icons/Add.vue';
 
 const cars = ref(store.appState.cars);
 const races = ref(store.appState.races);

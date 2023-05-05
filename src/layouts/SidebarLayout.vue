@@ -2,7 +2,9 @@
 	<div class="sidebar-layout">
 		<div class="nav-wrapper">
 			<nav>
-				<img class="logo" src="/RGC_Logo.svg" alt="rgc-logo" />
+				<router-link to="/">
+					<Derby />
+				</router-link>
 				<router-link to="/cars">
 					<div class="link-icon">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -54,6 +56,9 @@
 		</main>
 	</div>
 </template>
+<script setup>
+import Derby from '@/icons/Derby.vue';
+</script>
 <style scoped lang="scss">
 .sidebar-layout {
 	display: grid;

@@ -197,6 +197,11 @@ form.car {
 	border: var(--border-width) solid var(--color-background-card);
 	background: transparent;
 }
+.new-car-button {
+	&:hover {
+		border-color: var(--color-link-hover);
+	}
+}
 .color-dot {
 	&[data-color='red'] {
 		color: var(--color-red);
