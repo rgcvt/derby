@@ -6,8 +6,16 @@
 				<div v-if="races.length == 0">
 					<button @click="sortCars"><SortDesc /> Sort</button>
 				</div>
+				<div v-if="races.length > 0">
+					<router-link class="button" to="/races">Go to Races</router-link>
+					<p class="small">
+						Races have been built, you'll need to delete the races to add more
+						cars.
+					</p>
+				</div>
 			</template>
 		</PageHeader>
+
 		<div class="cars">
 			<div v-for="(car, i) in cars" class="car">
 				<div class="number">

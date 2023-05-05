@@ -16,7 +16,7 @@
 			</template>
 		</PageHeader>
 		<div v-if="cars.length == 0">
-			<p>You neet to add cars before you can build the races.</p>
+			<p>You need to add cars before you can build the races.</p>
 			<router-link class="button" to="/cars">Add Cars</router-link>
 		</div>
 
@@ -115,9 +115,3 @@ const shuffleArray = (array) => {
 	}
 };
 </script>
-<style>
-p.small {
-	font-size: 0.8rem;
-	margin-top: 0.5rem;
-}
-</style>
