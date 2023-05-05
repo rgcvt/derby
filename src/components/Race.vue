@@ -32,20 +32,20 @@ const races = ref(store.appState.races);
 const appState = ref(store.appState);
 const race = races.value[props.raceIndex];
 const incrementRace = (e) => {
-	nextTick(() => {
+	// for some reason nextTick() did not work here.
+	setTimeout(() => {
 		const unchecked = races.value.filter((r) => r.complete == false);
 		if (unchecked.length == 1) {
 			appState.value.raceCurrentIndex = unchecked[0].index;
 			appState.value.raceNextIndex = null;
 		} else if (unchecked.length > 1) {
-			console.log(unchecked);
 			appState.value.raceCurrentIndex = unchecked[0].index;
 			appState.value.raceNextIndex = unchecked[1].index;
 		} else {
 			appState.value.raceCurrentIndex = null;
 			appState.value.raceNextIndex = null;
 		}
-	});
+	}, 10);
 };
 </script>
 <style lang="scss" scoped>

@@ -90,7 +90,7 @@ const nextRace = races[store.appState.raceNextIndex];
 const isFullscreen = ref(false);
 
 const upcomingRaces = races
-	.filter((r) => r.id > store.appState.raceNextIndex + 1 && r.complete == false)
+	.filter((r) => r.index > store.appState.raceNextIndex && r.complete == false)
 	.slice(0, 2);
 
 console.log(upcomingRaces);
