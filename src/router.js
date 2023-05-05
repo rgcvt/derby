@@ -8,10 +8,6 @@ export default createRouter({
 			component: () => import('@/views/Home.vue'),
 		},
 		{
-			path: '/data',
-			component: () => import('@/views/Data.vue'),
-		},
-		{
 			path: '/cars',
 			component: () => import('@/views/Cars.vue'),
 		},

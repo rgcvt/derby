@@ -98,7 +98,7 @@
 	</SidebarLayout>
 </template>
 <script setup>
-import { ref, nextTick, onMounted } from 'vue';
+import { ref, nextTick } from 'vue';
 import { store } from '@/store.js';
 import InlineInput from '@/components/InlineInput.vue';
 import SidebarLayout from '@/layouts/SidebarLayout.vue';

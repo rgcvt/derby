@@ -38,8 +38,7 @@
 <script setup>
 import { ref } from 'vue';
 import { store } from '@/store.js';
-import InlineInput from './InlineInput.vue';
-import Close from '../icons/Close.vue';
+import Close from '@/icons/Close.vue';
 const props = defineProps({
 	raceIndex: Number,
 	laneIndex: Number,

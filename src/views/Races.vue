@@ -26,12 +26,12 @@
 	</SidebarLayout>
 </template>
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref } from 'vue';
 import { store } from '@/store.js';
 import RaceList from '@/components/RaceList.vue';
-import SidebarLayout from '../layouts/SidebarLayout.vue';
-import PageHeader from '../components/PageHeader.vue';
-import Add from '../icons/Add.vue';
+import SidebarLayout from '@/layouts/SidebarLayout.vue';
+import PageHeader from '@/components/PageHeader.vue';
+import Add from '@/icons/Add.vue';
 
 const cars = ref(store.appState.cars);
 const races = ref(store.appState.races);

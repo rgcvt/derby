@@ -35,8 +35,7 @@
 	</SidebarLayout>
 </template>
 <script setup>
-import SidebarLayout from '../layouts/SidebarLayout.vue';
-import { ref, watch, onMounted } from 'vue';
+import SidebarLayout from '@/layouts/SidebarLayout.vue';
 import { store } from '@/store.js';
 const cars = JSON.parse(JSON.stringify(store.appState.cars));
 const addTime = (car) => {
@@ -59,7 +58,6 @@ const state = (races) => {
 	const notFinished = races.find((r) => r.time == null);
 	return notFinished ? 'not-finished' : 'finished';
 };
-console.log(sortedCars);
 </script>
 <style scoped lang="scss">
 .cars {

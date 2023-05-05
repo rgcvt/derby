@@ -9,8 +9,8 @@
 	</SidebarLayout>
 </template>
 <script setup>
-import Derby from '../icons/Derby.vue';
-import SidebarLayout from '../layouts/SidebarLayout.vue';
+import Derby from '@/icons/Derby.vue';
+import SidebarLayout from '@/layouts/SidebarLayout.vue';
 </script>
 <style scoped lang="scss">
 .home-layout {
