@@ -3,7 +3,7 @@
 		<PageHeader>
 			<template v-slot:title>Cars</template>
 			<template v-slot:action>
-				<div v-if="races.length == 0">
+				<div v-if="races.length == 0 && cars.length > 1">
 					<button @click="sortCars"><SortDesc /> Sort</button>
 				</div>
 				<div v-if="races.length > 0">
