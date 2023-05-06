@@ -37,7 +37,7 @@ const cars = ref(store.appState.cars);
 const races = ref(store.appState.races);
 const appState = ref(store.appState);
 
-const colors = ['red', 'yellow', 'green', 'blue'];
+const colors = ['red', 'blue', 'green', 'yellow'];
 
 const deleteRaces = () => {
 	if (confirm('This will delete all races, do you want to proceed?')) {

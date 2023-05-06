@@ -112,7 +112,7 @@ const cars = ref(store.appState.cars);
 const races = ref(store.appState.races);
 const formVisible = ref(false);
 
-const colors = ['red', 'yellow', 'green', 'blue'];
+const colors = ['red', 'blue', 'green', 'yellow'];
 
 const updateDriver = (driver, i) => {
 	cars.value[i].driver = driver;
