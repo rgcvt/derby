@@ -33,6 +33,9 @@ const createCar = () => {
 };
 const deleteCar = (i: number) => {
 	cars.value.splice(i, 1);
+	if (cars.value.length) {
+		canAddNewCar.value = true;
+	}
 };
 
 const checkCarId = (e: Event) => {
