@@ -1,18 +1,95 @@
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
+import { defaultAppState } from '../store/appState';
+import IconDerby from '../components/IconDerby.vue';
+
+const localAppState: AppState = localStorage.derbyAppState ? JSON.parse(localStorage.derbyAppState) : defaultAppState;
+const localCars: Car[] = localStorage.derbyCars ? JSON.parse(localStorage.derbyCars) : [];
+const localRaces: Race[] = localStorage.derbyRaces ? JSON.parse(localStorage.derbyRaces) : [];
+
+const cars = ref(localCars);
+const races = ref(localRaces);
+const appState = ref(localAppState);
+const isFullscreen = ref(false);
+
+onMounted(() => {
+	window.addEventListener('storage', () => {
+		cars.value = JSON.parse(localStorage.derbyCars);
+		races.value = JSON.parse(localStorage.derbyRaces);
+		appState.value = JSON.parse(localStorage.derbyAppState);
+	});
+});
+
+const currentRace = computed(() => {
+	if (appState.value.currentRace !== null) {
+		return races.value[appState.value.currentRace];
+	} else {
+		return null;
+	}
+});
+
+const nextRace = computed(() => {
+	if (appState.value.nextRace !== null) {
+		return races.value[appState.value.nextRace];
+	} else {
+		return null;
+	}
+});
+
+function upcomingFilter(race: Race) {
+	let show = false;
+	if (race.complete == false && race.index !== null && appState.value.nextRace !== null) {
+		show = race.index > appState.value.nextRace;
+	}
+	return show;
+}
+const upcomingRaces = computed(() => {
+	return races.value.filter((r) => upcomingFilter(r)).slice(0, 2);
+});
+
+const driverByCarId = (carId: number) => {
+	const car = cars.value.find((c) => c.id == carId);
+	return car ? car.driver : null;
+};
+
+const toggleFullscreen = () => {
+	const element = document.querySelector('.race-display');
+	if (element) {
+		if (document.fullscreenElement) {
+			document.exitFullscreen();
+			isFullscreen.value = true;
+		} else {
+			element.requestFullscreen();
+			isFullscreen.value = false;
+		}
+	}
+};
+</script>
 <template>
 	<div class="race-display" v-if="currentRace">
+		<div class="fullscreen-controls">
+			<RouterLink class="home-link" to="/" title="home">
+				<IconDerby />
+			</RouterLink>
+			<button @click="toggleFullscreen" title="fullscreen">
+				<vue-feather v-if="isFullscreen" type="maximize" stroke-width="2" size="48" />
+				<vue-feather v-else type="minimize" stroke-width="2" size="48" />
+			</button>
+		</div>
 		<div class="current-race race">
 			<h2 v-if="currentRace">
-				Current Race: {{ store.appState.raceCurrentIndex + 1 }} /
+				Current Race: {{ `${(appState.currentRace as number) + 1}` }} /
 				{{ races.length }}
 			</h2>
 			<template v-if="currentRace">
 				<div
-					v-for="(lane, i) in currentRace.lanes"
+					v-for="lane in currentRace.lanes"
 					class="lane"
 					:data-color="lane.color"
+					:key="`race-${currentRace.index}-lane-${lane.color}`"
 				>
 					<div class="lane-content">
-						<div class="driver">{{ driverByCarId(lane.car) }}</div>
+						<div class="driver">{{ driverByCarId(lane.car as number) }}</div>
 						<ul class="meta">
 							<li><span class="label">Car:</span> #{{ lane.car }}</li>
 							<li>
@@ -28,13 +105,9 @@
 		<div class="next-race race">
 			<h2 v-if="nextRace">On Deck</h2>
 			<template v-if="nextRace">
-				<div
-					v-for="(lane, i) in nextRace.lanes"
-					class="lane"
-					:data-color="lane.color"
-				>
+				<div v-for="lane in nextRace.lanes" class="lane" :data-color="lane.color">
 					<div class="lane-content">
-						<div class="driver">{{ driverByCarId(lane.car) }}</div>
+						<div class="driver">{{ driverByCarId(lane.car as number) }}</div>
 						<ul class="meta">
 							<li><span class="label">Car:</span> #{{ lane.car }}</li>
 							<li>
@@ -50,87 +123,22 @@
 			<h2 v-if="nextRace">Upcoming</h2>
 			<div>
 				<div class="upcoming-race" v-for="race in upcomingRaces">
-					<div class="race-title">Race: {{ race.index + 1 }}</div>
+					<div class="race-title">Race: {{ (race.index as number) + 1 }}</div>
 					<div class="upcoming-lanes">
 						<div class="upcoming-lane" v-for="lane in race.lanes">
 							<div class="color-dot" :data-color="lane.color">⏺</div>
-							<div class="driver">{{ driverByCarId(lane.car) }}</div>
+							<div class="driver">{{ driverByCarId(lane.car as number) }}</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="fullscreen-controls">
-			<button
-				v-if="!isFullscreen"
-				@click="enterFullScreen"
-				title="enter fullscreen"
-			>
-				<FullscreenEnter />
-			</button>
-			<button
-				v-if="isFullscreen"
-				@click="exitFullScreen"
-				title="exit fullscreen"
-			>
-				<FullscreenExit />
-			</button>
-		</div>
 	</div>
 </template>
-<script setup>
-import { ref, onMounted } from 'vue';
-import { store } from '@/store.js';
-import FullscreenEnter from '@/icons/FullscreenEnter.vue';
-import FullscreenExit from '@/icons/FullscreenExit.vue';
-const races = store.appState.races;
-const cars = store.appState.cars;
-const currentRace = races[store.appState.raceCurrentIndex];
-const nextRace = races[store.appState.raceNextIndex];
-const isFullscreen = ref(false);
-
-const upcomingRaces = races
-	.filter((r) => r.index > store.appState.raceNextIndex && r.complete == false)
-	.slice(0, 2);
-
-onMounted(() => {
-	window.addEventListener('storage', () => {
-		location.reload();
-	});
-});
-
-const driverByCarId = (carId) => {
-	const car = cars.find((c) => c.id == carId);
-	return car.driver;
-};
-
-function enterFullScreen() {
-	const element = document.querySelector('.race-display');
-	if (element.requestFullscreen) {
-		element.requestFullscreen();
-	} else if (element.mozRequestFullScreen) {
-		element.mozRequestFullScreen(); // Firefox
-	} else if (element.webkitRequestFullscreen) {
-		element.webkitRequestFullscreen(); // Safari
-	} else if (element.msRequestFullscreen) {
-		element.msRequestFullscreen(); // IE/Edge
-	}
-	isFullscreen.value = true;
-}
-
-function exitFullScreen() {
-	if (document.exitFullscreen) {
-		document.exitFullscreen();
-	} else if (document.mozCancelFullScreen) {
-		document.mozCancelFullScreen();
-	} else if (document.webkitExitFullscreen) {
-		document.webkitExitFullscreen();
-	}
-	isFullscreen.value = false;
-}
-</script>
 <style scoped lang="scss">
 .race-display {
+	--border-width: 0.2rem;
+	font-family: var(--font-sans);
 	font-size: 1vw;
 	--padding: 4em;
 	padding: var(--padding);
@@ -184,10 +192,10 @@ h2 {
 }
 .next-race {
 	.lane {
-		border-right: 0.5em solid var(--color-highlight);
+		border-right: 1em solid var(--color-highlight);
 	}
 	.driver {
-		font-size: 3em;
+		font-size: 2.5em;
 		font-weight: 600;
 	}
 }
@@ -231,10 +239,11 @@ ul.meta {
 	color: #fff;
 
 	.label {
-		color: var(--color-light-muted);
+		opacity: 0.75;
+		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
-		font-size: 0.9em;
+		font-size: 0.8em;
 	}
 	.color {
 		color: var(--color-highlight);
@@ -271,7 +280,7 @@ ul.meta {
 	margin-bottom: 2em;
 }
 .race-title {
-	color: var(--color-ui-intense);
+	color: var(--color-text-muted);
 	font-size: 2em;
 	font-weight: 600;
 	text-transform: uppercase;
@@ -279,20 +288,28 @@ ul.meta {
 }
 .fullscreen-controls {
 	position: fixed;
+	display: flex;
+	align-items: center;
+	gap: 2rem;
 	bottom: var(--space-md);
 	right: var(--space-md);
+
 	button {
-		padding: 0;
-		background: transparent;
-		border: transparent;
+		all: unset;
+		box-sizing: border-box;
+		cursor: pointer;
+
 		transition: transform 150ms;
 		&:hover {
 			transform: scale(1.1);
 		}
-		svg {
-			width: 3em;
-			height: 3em;
-		}
+	}
+}
+.home-link {
+	color: var(--color-light-intense);
+	svg {
+		height: 4rem;
+		width: 4rem;
 	}
 }
 </style>

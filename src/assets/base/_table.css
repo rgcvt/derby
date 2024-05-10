@@ -1,0 +1,62 @@
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+table caption {
+	text-align: left;
+	font-size: 1rem;
+	font-weight: 600;
+}
+td,
+th {
+	text-align: left;
+	vertical-align: top;
+	word-wrap: break-word;
+}
+:where(td, th):not(:first-child, :last-child) {
+	padding: 0.25rem 0.5rem;
+}
+td:first-child,
+th:first-child {
+	padding: 0.25rem 0.5rem 0.25rem 0;
+}
+td:last-child,
+th:last-child {
+	padding: 0.25rem 0 0.25rem 0.5rem;
+}
+
+thead {
+	border-bottom: var(--border-width) solid var(--color-background-muted);
+}
+thead th {
+	vertical-align: bottom;
+}
+
+tfoot {
+	border-top: var(--border-width) solid var(--color-background-muted);
+}
+
+tbody tr {
+	border-top: var(--border-width) solid var(--color-background-muted);
+}
+tbody tr:last-child {
+	border-bottom: var(--border-width) solid var(--color-background-muted);
+}
+
+.cell-actions-parent {
+	position: relative;
+}
+.cell-actions {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 0.5rem;
+
+	margin: auto 0;
+}

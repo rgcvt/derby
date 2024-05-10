@@ -1,10 +1,3 @@
 <template>
-	<main>
-		<router-view />
-	</main>
+	<RouterView />
 </template>
-
-<style>
-#app {
-}
-</style>

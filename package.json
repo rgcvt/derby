@@ -1,22 +1,25 @@
 {
-	"name": "derby",
+	"name": "derby2",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build",
-		"build:ghPages": "vite build --base=./",
+		"build": "vue-tsc && vite build",
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"baselayer.css": "^1.0.31",
-		"vue": "^3.2.47",
-		"vue-router": "^4.1.6"
+		"feather-icons": "^4.29.2",
+		"vue": "latest",
+		"vue-feather": "^2.0.0",
+		"vue-router": "^4.3.2"
 	},
 	"devDependencies": {
-		"@vitejs/plugin-vue": "^4.1.0",
-		"sass": "^1.62.1",
-		"vite": "^4.3.2"
+		"@types/w3c-web-serial": "^1.0.6",
+		"@vitejs/plugin-vue": "latest",
+		"sass": "^1.77.0",
+		"typescript": "latest",
+		"vite": "latest",
+		"vue-tsc": "latest"
 	}
 }
