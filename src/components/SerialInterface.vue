@@ -2,8 +2,10 @@
 import { ref, watch } from 'vue';
 import { appStateStore } from '../store/appState';
 import { raceStore } from '../store/races';
+import { serialStore } from '../store/serial';
 const races = ref(raceStore.races);
 const appState = ref(appStateStore.appState);
+const serial = ref(serialStore.serial);
 
 let serialString = '';
 let times: LaneTimes = {
@@ -13,26 +15,24 @@ let times: LaneTimes = {
 	yellow: null,
 };
 
-let port: SerialPort | undefined;
-appState.value.serialConnected = port ? true : false;
-
 async function connect(): Promise<void> {
 	try {
-		port = await navigator.serial.requestPort();
-		await port.open({ baudRate: 9600 }); // adjust baudRate as per your requirement
-		appState.value.serialConnected = true;
+		serial.value.port = await navigator.serial.requestPort();
+		await serial.value.port.open({ baudRate: 9600 }); // adjust baudRate as per your requirement
+		serial.value.connected = true;
 		read();
-		console.log('Connected to serial port:', port.getInfo());
+		console.log('Connected to serial port:', serial.value.port.getInfo());
 	} catch (error) {
-		appState.value.serialConnected = false;
+		serial.value.connected = false;
+		serial.value.port = null;
 		console.error('Failed to connect to serial port:', error);
 	}
 }
 
 async function read(): Promise<void> {
 	try {
-		if (!port) throw new Error('Serial port not connected');
-		const reader = port.readable?.getReader();
+		if (!serial.value.port) throw new Error('Serial port not connected');
+		const reader = serial.value.port.readable?.getReader();
 		if (!reader) throw new Error('Reader was not created');
 		while (true) {
 			const { value, done } = await reader.read();
@@ -74,8 +74,8 @@ async function read(): Promise<void> {
 
 async function write(data: string): Promise<void> {
 	try {
-		if (!port) throw new Error('Serial port not connected');
-		const writer = port.writable?.getWriter();
+		if (!serial.value.port) throw new Error('Serial port not connected');
+		const writer = serial.value.port.writable?.getWriter();
 		if (!writer) throw new Error('Writer was not created');
 		const dataArrayBuffer = new TextEncoder().encode(data);
 		await writer.write(dataArrayBuffer);
@@ -97,12 +97,12 @@ watch(
 );
 </script>
 <template>
-	<div class="serial-status" :data-color="appState.serialConnected ? 'success' : 'danger'">
+	<div class="serial-status" :data-color="serial.connected ? 'success' : 'danger'">
 		<div class="dot"></div>
 		<div class="title">
-			{{ appState.serialConnected ? 'Serial Connected' : 'Serial Disconnected' }}
+			{{ serial.connected ? 'Serial Connected' : 'Serial Disconnected' }}
 		</div>
-		<button class="button-ui connect-button" v-if="!appState.serialConnected" @click="connect">
+		<button class="button-ui connect-button" v-if="!serial.connected" @click="connect">
 			<vue-feather type="link-2" stroke-width="3" size="14"></vue-feather>&nbsp;Connect
 		</button>
 	</div>

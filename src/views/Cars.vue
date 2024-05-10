@@ -129,7 +129,6 @@ const buildPattern = (i: number) => {
 									v-model="car.driver"
 									type="text"
 									placeholder="Add the driver's name"
-									:readonly="appState.racesCreated"
 									required
 									@input="clearValidity($event)"
 									@blur="checkDriver($event)"

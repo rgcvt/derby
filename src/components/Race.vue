@@ -3,10 +3,12 @@ import { ref } from 'vue';
 import { raceStore } from '../store/races';
 import { carStore } from '../store/cars';
 import { appStateStore } from '../store/appState';
+import { serialStore } from '../store/serial';
 
 const races = ref(raceStore.races);
 const cars = ref(carStore.cars);
 const appState = ref(appStateStore.appState);
+const serial = ref(serialStore.serial);
 
 const props = defineProps<{
 	raceIndex: number;
@@ -64,7 +66,7 @@ const incrementRace = () => {
 			<div class="cell-actions race-actions">
 				<button
 					class="button-ui start-button"
-					v-if="appState.currentRace == raceIndex && appState.serialConnected"
+					v-if="appState.currentRace == raceIndex && serial.connected"
 					@click="startRace"
 				>
 					<vue-feather

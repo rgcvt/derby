@@ -25,8 +25,11 @@ type AppState = {
 	racesCreated: boolean;
 	currentRace: number | null;
 	nextRace: number | null;
-	serialConnected: boolean;
 	raceOngoing: boolean;
+};
+type SerialStore = {
+	port: SerialPort | null;
+	connected: boolean;
 };
 type LaneTimes = {
 	red: number | null;
